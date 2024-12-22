@@ -27,17 +27,27 @@ class Task(models.Model):
         ('URGENT', 'Urgent'),
     ]
     
+    PROCESS_CHOICES = [
+        ('TO_DO', 'To Do'),
+        ('IN_PROGRESS', 'In Progress'),
+        ('AWAITING_FEEDBACK', 'Awaiting Feedback'),
+        ('DONE', 'Done'),
+    ]
+    
     title = models.TextField(max_length=100)
     description = models.TextField(max_length=1000)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     assigned_to = models.ManyToManyField(Contact, related_name='task')
     due_date = models.DateField(default=timezone.now)
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='LOW')
-    
+    process = models.CharField(max_length=20, choices=PROCESS_CHOICES, default='TO_DO')
+
     def clean(self):
         super().clean()
         if self.due_date < timezone.now().date():
             raise ValidationError("Das Datum darf nicht in der Vergangenheit liegen.")
+        if not hasattr(self, 'boardcard'):
+            raise ValidationError("Jeder Task muss einer BoardCard zugeordnet sein.")
     
     def __str__(self):
         return self.title
@@ -45,7 +55,7 @@ class Task(models.Model):
 class Subtasks(models.Model):
     task = models.ForeignKey(Task, related_name='subtasks', on_delete=models.CASCADE)
     title = models.TextField(max_length=500)
-    competed = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title
