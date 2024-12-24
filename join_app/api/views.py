@@ -4,6 +4,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.utils import timezone
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 
 class ContactsView(generics.ListCreateAPIView):
     queryset = Contact.objects.all()
@@ -16,16 +17,19 @@ class OneContactView(generics.RetrieveUpdateDestroyAPIView):
 class TasksView(generics.ListCreateAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
 class OneTaskView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     
 class CategoryView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     
 class SummaryView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, *args, **kwargs):
         task_count = Task.objects.count()
         in_progress_count = Task.objects.filter(process='IN_PROGRESS').count()
