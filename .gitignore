@@ -1,2 +1,43 @@
+# Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Django databases and media
 db.sqlite3
-/env
+media/
+
+# Virtual environment files
+env/
+venv/
+.env/
+
+# Django settings files, if locally modified
+*.env
+
+# Cache files
+*.log
+*.pot
+*.pyc
+*.mo
+
+# Django static files (if you don't want to version them)
+staticfiles/
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# macOS-specific files
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
+
+# Coverage reports (if you use coverage for testing)
+.coverage
+coverage/
+
+# Test runtime data
+nosetests.xml
